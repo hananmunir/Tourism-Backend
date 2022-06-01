@@ -6,7 +6,7 @@ const userSchema = mongoose.Schema(
     name: {
       type: String,
       required: true,
-      lowercase: true,
+
       minLength: [7, "Name too Short"],
       maxLength: [50, "Name too Long"],
     },
@@ -22,10 +22,7 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    phoneNo: {
-      type: String,
-    },
-   
+
     role: {
       type: String,
       default: "User",
@@ -34,7 +31,6 @@ const userSchema = mongoose.Schema(
   { timestamps: true }
 );
 userSchema.methods.encryptPass = async function () {
- 
   // hash password
   let salt = await bycrpt.genSalt(10);
   this.password = await bycrpt.hash(this.password, salt);

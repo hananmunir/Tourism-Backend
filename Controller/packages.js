@@ -45,12 +45,14 @@ export const getPost = async (req, res, next) => {
 // get all posts
 export const getPosts = async (req, res, next) => {
   const pages = Number(req.query.pages ? req.query.pages : 1);
-  const perPage = Number(req.query.perPage ? req.query.perPage : 9);
-  const skipRecords = (pages - 1) * perPage;
+  const perPage = Number(req.query.perPage ? req.query.perPage : 6);
+  const skipRecords = Number((pages - 1) * perPage);
+
   try {
     const post = await Package.find().skip(skipRecords).limit(perPage);
+    const total = await Package.countDocuments();
 
-    res.status(200).json(post);
+    res.status(200).json({ packages: post, totalPackages: total });
   } catch (error) {
     next(error);
   }
@@ -81,7 +83,7 @@ export const createPost = async (req, res, next) => {
 
     //save object in database
     await newPost.save();
-    res.status(200).json(newPost);
+    res.status(201).json(newPost);
   } catch (error) {
     next(error);
   }
@@ -128,6 +130,7 @@ export const updatePost = async (req, res, next) => {
 
 //delete a post using id
 export const deletePost = async (req, res, next) => {
+  console.log("Deleting");
   const { id } = req.params;
   try {
     //check if post exists
@@ -135,11 +138,12 @@ export const deletePost = async (req, res, next) => {
       return next(createError(404, "Object not found"));
 
     //to delete image from S3 bucket
-    const post = await postDescription.findById(id);
+    const post = await Package.findById(id);
+
     deleteFile(post.image);
 
     //delete post
-    await postDescription.findByIdAndRemove(id);
+    await post.remove();
 
     res.status(200).json({ message: "Post Removed" });
   } catch (error) {

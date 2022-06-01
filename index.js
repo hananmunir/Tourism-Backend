@@ -9,6 +9,7 @@ import cookieParser from "cookie-parser";
 //routes
 import packageRoutes from "./Routes/packages.js";
 import userRoutes from "./Routes/users.js";
+import paymentRouter from "./Routes/payment.js";
 
 //Configuration
 dotenv.config();
@@ -25,6 +26,7 @@ app.use(cors());
 app.use(cookieParser());
 app.use("/api/packages/", packageRoutes);
 app.use("/api/users/", userRoutes);
+app.use("/api/payment/", paymentRouter);
 
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;

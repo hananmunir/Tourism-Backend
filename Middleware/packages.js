@@ -6,10 +6,9 @@ export const upload = multer({ dest: "uploads/" });
 
 // handling validation of date
 export const validatePost = (req, res, next) => {
-  const { departureDate } = req.body;
-  let date = new Date(departureDate);
+  const { date } = req.body;
 
-  req.body.date = date;
+  req.body.date = new Date(date);
 
   // if (!validateDate(date)) {
   //   console.log("Inavalid Date");

@@ -6,6 +6,7 @@ import bycrpt from "bcryptjs";
 import { createError } from "../utils/error.js";
 
 dotenv.config();
+
 // authentication user
 export const signIn = async (req, res, next) => {
   const { email, password } = req.body;
@@ -28,8 +29,11 @@ export const signIn = async (req, res, next) => {
 
     //create token
     const token = jwt.sign({ _id: existingUser._id }, process.env.SECRET);
+
     //return user
-    res.status(200).json(token);
+    res
+      .status(200)
+      .json({ token, user: _.pick(existingUser, ["name", "email", "role"]) });
   } catch (error) {
     next(error);
   }
@@ -37,13 +41,18 @@ export const signIn = async (req, res, next) => {
 
 // register user
 export const signUp = async (req, res, next) => {
-  const { email, password, firstName, lastName } = req.body.user;
+  const { email, password, firstName, lastName } = req.body;
 
-  if (await User.findOne({ email }))
-    return next(createError(201, "Email already exists"));
+  const user = await User.findOne({ email });
+  if (user) {
+    return next(createError(400, "User already exists"));
+  }
+
   //create a new user object
   const newUser = new User({
-    name: `${firstName} ${lastName}`,
+    name: `${
+      firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase()
+    } ${lastName.charAt(0).toUpperCase() + lastName.slice(1).toLowerCase()}`,
     email,
     password,
   });
@@ -52,6 +61,7 @@ export const signUp = async (req, res, next) => {
   // store user in database
   try {
     await newUser.save();
+  
     res.status(200).json(_.pick(newUser, ["name", "email"]));
   } catch (error) {
     next(error);

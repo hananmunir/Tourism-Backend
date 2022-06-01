@@ -1,4 +1,5 @@
 import express from "express";
+
 import {
   getPost,
   getPosts,
@@ -21,7 +22,8 @@ const router = express.Router();
 // app routes
 router.get("/:id", getPost);
 router.get("/", getPosts);
-router.post("/", upload.single("image"), auth, admin, validatePost, createPost);
+// router.post("/", upload.single("image"), auth, admin, validatePost, createPost);
+router.post("/", upload.single("image"), validatePost, createPost);
 router.patch(
   "/:id",
   upload.single("image"),
@@ -31,6 +33,7 @@ router.patch(
   updatePost
 );
 router.delete("/:id", auth, admin, deletePost);
+//router.delete("/:id", deletePost);
 router.get("/images/:id", getImage);
 
 export default router;
