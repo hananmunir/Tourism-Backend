@@ -46,7 +46,7 @@ export const deleteFile = (filekey) => {
   };
 
   s3.deleteObject(params, function (err, data) {
-    if (err) console.log(err, err.stack); // error
+    if (err) console.log(err); // error
     else console.log(); // deleted
   });
 };

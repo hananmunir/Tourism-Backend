@@ -6,6 +6,7 @@ import User from "../Models/users.js";
 
 export const auth = async (req, res, next) => {
   const token = req.header("Authorization");
+
   if (!token) return next(createError(401, "Unauthorized Request"));
 
   try {

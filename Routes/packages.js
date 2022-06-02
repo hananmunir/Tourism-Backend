@@ -22,8 +22,8 @@ const router = express.Router();
 // app routes
 router.get("/:id", getPost);
 router.get("/", getPosts);
-// router.post("/", upload.single("image"), auth, admin, validatePost, createPost);
-router.post("/", upload.single("image"), validatePost, createPost);
+router.post("/", upload.single("image"), auth, admin, validatePost, createPost);
+//router.post("/", upload.single("image"), validatePost, createPost);
 router.patch(
   "/:id",
   upload.single("image"),

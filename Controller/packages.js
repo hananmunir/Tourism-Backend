@@ -28,6 +28,7 @@ export const getImage = async (req, res, next) => {
 export const getPost = async (req, res, next) => {
   //destructure id from paramaters
   const { id } = req.params;
+
   try {
     //check if post exists
     if (!mongoose.Types.ObjectId.isValid(id))
@@ -35,6 +36,8 @@ export const getPost = async (req, res, next) => {
 
     //get post using the id
     const post = await Package.findById(id);
+
+    if (!post) return next(createError(404, "Object not found"));
 
     res.status(200).json(post);
   } catch (error) {
@@ -145,7 +148,7 @@ export const deletePost = async (req, res, next) => {
     //delete post
     await post.remove();
 
-    res.status(200).json({ message: "Post Removed" });
+    res.status(200).json(post._id);
   } catch (error) {
     next(error);
   }
