@@ -18,7 +18,11 @@ export const getImage = async (req, res, next) => {
   //download image and render it
   try {
     const readStream = getFileStream(key);
-    readStream.pipe(res);
+    readStream
+      .on("error", (err) => {
+        next(createError(404, "Image not found"));
+      })
+      .pipe(res);
   } catch (error) {
     next(error);
   }
@@ -64,11 +68,12 @@ export const getPosts = async (req, res, next) => {
 // create a new post
 export const createPost = async (req, res, next) => {
   //get required fields from body
-  const { title, desc, cost, date, duration, destination } = req.body;
+  const { title, description, cost, departureDate, duration, destination } =
+    req.body;
 
   try {
     //upload image to s3
-    let result = await uploadFile(req.file).then((result) => result);
+    let result = await uploadFile(req.file);
 
     //deletes the file from local storage
     await unlinkFile(req.file.path);
@@ -79,8 +84,8 @@ export const createPost = async (req, res, next) => {
       destination,
       cost,
       image: result.Key,
-      description: desc,
-      departureDate: date,
+      description,
+      departureDate,
       duration,
     });
 
@@ -99,7 +104,7 @@ export const updatePost = async (req, res, next) => {
   const { id } = req.params;
   const post = req.body;
   const file = req.file;
-
+  console.log(post);
   try {
     const olderPost = await Package.findById(id);
     //check if post exist

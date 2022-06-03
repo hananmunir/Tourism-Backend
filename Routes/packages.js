@@ -30,6 +30,7 @@ router.patch(
   auth,
   admin,
   removeUndefined,
+  validatePost,
   updatePost
 );
 router.delete("/:id", auth, admin, deletePost);

@@ -61,7 +61,7 @@ export const signUp = async (req, res, next) => {
   // store user in database
   try {
     await newUser.save();
-  
+
     res.status(200).json(_.pick(newUser, ["name", "email"]));
   } catch (error) {
     next(error);
