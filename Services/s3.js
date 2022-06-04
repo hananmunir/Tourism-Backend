@@ -1,7 +1,6 @@
 import S3 from "aws-sdk/clients/s3.js";
 import fs from "fs";
 import dotenv from "dotenv";
-import { createError } from "../utils/error.js";
 
 //congifure environment variables
 dotenv.config();
@@ -35,7 +34,7 @@ export const getFileStream = (filekey) => {
     Bucket: bucketname,
     Key: filekey,
   };
-  console.log(downloadParams);
+
   return s3.getObject(downloadParams).createReadStream();
 };
 
@@ -59,8 +58,4 @@ export const deleteFile = async (filekey) => {
   } catch (err) {
     console.log("File not Found ERROR : " + err.code);
   }
-  // s3.deleteObject(params, function (err, data) {
-  //   if (err) console.log(err); // error
-  //   else console.log("Deleted Successfully"); // deleted
-  // });
 };

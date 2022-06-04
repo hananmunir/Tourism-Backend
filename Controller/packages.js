@@ -70,7 +70,7 @@ export const createPost = async (req, res, next) => {
   //get required fields from body
   const { title, description, cost, departureDate, duration, destination } =
     req.body;
-
+  console.log("Creating Product Request \n", req.body);
   try {
     //upload image to s3
     let result = await uploadFile(req.file);
@@ -104,7 +104,8 @@ export const updatePost = async (req, res, next) => {
   const { id } = req.params;
   const post = req.body;
   const file = req.file;
-  console.log(post);
+
+  console.log("Update Date", post);
   try {
     const olderPost = await Package.findById(id);
     //check if post exist
