@@ -14,6 +14,7 @@ import {
   removeUndefined,
   upload,
   validatePost,
+  checkFileType,
 } from "../Middleware/packages.js";
 
 //router
@@ -22,13 +23,22 @@ const router = express.Router();
 // app routes
 router.get("/:id", getPost);
 router.get("/", getPosts);
-router.post("/", upload.single("image"), auth, admin, validatePost, createPost);
+router.post(
+  "/",
+  upload.single("image"),
+  auth,
+  admin,
+  checkFileType,
+  validatePost,
+  createPost
+);
 //router.post("/", upload.single("image"), validatePost, createPost);
 router.patch(
   "/:id",
   upload.single("image"),
   auth,
   admin,
+  checkFileType,
   removeUndefined,
   validatePost,
   updatePost
